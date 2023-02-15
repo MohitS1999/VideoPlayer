@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "112109054950",
+    "project_id": "videoplayer-fa15d",
+    "storage_bucket": "videoplayer-fa15d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:112109054950:android:5af3c93842f1809aa1c427",
+        "android_client_info": {
+          "package_name": "com.example.videoplayer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "112109054950-c3i5lfpe87h08fb8aejtfuf2tergni48.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.videoplayer",
+            "certificate_hash": "dfcce101f2b56789ed63c95ee17dfb51cc425194"
+          }
+        },
+        {
+          "client_id": "112109054950-1vnthpkei7u8147eicvj2k17ji540mi2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdqV0LKEF--gZVXIA1Im9CIqJ0SCbTbNc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "112109054950-1vnthpkei7u8147eicvj2k17ji540mi2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
