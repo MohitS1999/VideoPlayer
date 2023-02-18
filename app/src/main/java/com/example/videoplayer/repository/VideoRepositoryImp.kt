@@ -1,7 +1,6 @@
 package com.example.videoplayer.repository
 
 import android.util.Log
-import com.example.videoplayer.Adapter.VideoSongAdapter
 import com.example.videoplayer.Model.VideoData
 import com.example.videoplayer.util.UiState
 import com.google.firebase.firestore.FirebaseFirestore

@@ -6,4 +6,62 @@
     android:layout_height="match_parent"
     tools:context=".UI.PlayerActivity">
 
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/playerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:controller_layout_id="@layout/custome_control_view"
+        android:keepScreenOn="true"/>
+
+    <LinearLayout
+        android:id="@+id/topController"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="#42000000"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:src="@drawable/back_icon"
+            android:backgroundTint="@android:color/transparent"
+            android:contentDescription="@string/back_btn"
+            app:tint="@color/white" />
+
+
+        <TextView
+            android:id="@+id/videoTitle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/video_name"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_16ssp"
+            android:singleLine="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:ellipsize="marquee"
+            android:gravity="center"/>
+
+        <ImageButton
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:src="@drawable/menu"
+            android:contentDescription="@string/menu"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_marginEnd="@dimen/_50sdp"
+            app:tint="@color/white" />
+    </LinearLayout>
+
+    <ImageButton
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:backgroundTint="@android:color/transparent"
+        android:src="@drawable/lock_open_icon"
+        android:contentDescription="@string/lock"
+        app:layout_constraintEnd_toEndOf="@+id/topController"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
 </androidx.constraintlayout.widget.ConstraintLayout>

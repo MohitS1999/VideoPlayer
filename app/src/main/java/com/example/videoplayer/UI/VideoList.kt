@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.videoplayer.Adapter.VideoSongAdapter
 import com.example.videoplayer.Model.VideoData
@@ -67,6 +68,10 @@ class VideoList : Fragment() {
     }
     private fun onSongClicked(list:ArrayList<VideoData>,position: Int){
         Log.d(TAG, "onSongClicked:$position")
+        val bundle =Bundle()
+        bundle.putParcelableArrayList("list",list)
+        bundle.putInt("position",position)
+        findNavController().navigate(R.id.action_videoList_to_playerActivity,bundle)
     }
 
 

@@ -9,5 +9,14 @@
         android:id="@+id/videoList"
         android:name="com.example.videoplayer.UI.VideoList"
         android:label="fragment_video_list"
-        tools:layout="@layout/fragment_video_list" />
+        tools:layout="@layout/fragment_video_list" >
+        <action
+            android:id="@+id/action_videoList_to_playerActivity"
+            app:destination="@id/playerActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/playerActivity"
+        android:name="com.example.videoplayer.UI.PlayerActivity"
+        android:label="activity_player"
+        tools:layout="@layout/activity_player" />
 </navigation>
