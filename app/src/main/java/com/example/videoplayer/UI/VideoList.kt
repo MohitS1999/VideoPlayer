@@ -2,10 +2,10 @@ package com.example.videoplayer.UI
 
 import android.os.Bundle
 import android.util.Log
+import android.view.*
+import android.widget.SearchView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +26,11 @@ class VideoList : Fragment() {
     private lateinit var videoAdapter:VideoSongAdapter
 
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,6 +47,24 @@ class VideoList : Fragment() {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.search_view,menu)
+        val searchView = menu.findItem(R.id.seachView)?.actionView as SearchView
+        searchView.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText != null){
+                    Toast.makeText(requireContext(),newText.toString(),Toast.LENGTH_SHORT).show()
+                }
+                return true
+            }
+
+        })
+        super.onCreateOptionsMenu(menu, inflater)
+    }
     private fun observeSongs() {
         viewModel.getSongs.observe(viewLifecycleOwner){
             when(it){

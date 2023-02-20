@@ -15,4 +15,5 @@
     <string name="next_btn">Next Button</string>
     <string name="fullscreen_btn">FullScreen Button</string>
     <string name="play_btn">Play Button</string>
+    <string name="search">search</string>
 </resources>
