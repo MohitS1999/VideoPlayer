@@ -11,4 +11,8 @@
     <string name="back_btn">Back Button</string>
     <string name="menu">Menu</string>
     <string name="video_name">Video Name</string>
+    <string name="prev_btn">Previous Button</string>
+    <string name="next_btn">Next Button</string>
+    <string name="fullscreen_btn">FullScreen Button</string>
+    <string name="play_btn">Play Button</string>
 </resources>

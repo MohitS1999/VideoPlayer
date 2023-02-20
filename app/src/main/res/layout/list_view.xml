@@ -2,51 +2,45 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/_100sdp"
+    android:layout_height="@dimen/_70sdp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="@dimen/_100sdp"
+        android:layout_width="@dimen/_70sdp"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/_5sdp"
         app:cardCornerRadius="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-        <RelativeLayout
+
+        <ImageView
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/ic_launcher_round" />
-
-            <TextView
-                android:id="@+id/time"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:layout_margin="@dimen/_7sdp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="00:00"
-                android:textColor="@color/black"/>
-        </RelativeLayout>
-
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher_round" />
 
 
     </androidx.cardview.widget.CardView>
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="@dimen/_10sdp"
+        android:text="00:00"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/songName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="@dimen/_12sdp"
         android:text="BHAKTI SONGS"
         android:textColor="@color/black"
         android:maxLines="1"
@@ -62,6 +56,7 @@
         android:text="BHAKTI SONGS"
         android:textColor="@color/black"
         android:textSize="@dimen/_10ssp"
+        android:layout_marginBottom="@dimen/_12sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/cardView"
         app:layout_constraintTop_toBottomOf="@+id/songName" />

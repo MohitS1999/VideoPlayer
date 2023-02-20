@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".UI.PlayerActivity">
 
     <com.google.android.exoplayer2.ui.PlayerView
@@ -24,6 +25,7 @@
         android:orientation="horizontal">
 
         <ImageButton
+            android:id="@+id/backBtn"
             android:layout_width="@dimen/_50sdp"
             android:layout_height="@dimen/_50sdp"
             android:src="@drawable/back_icon"
@@ -43,6 +45,7 @@
             android:singleLine="true"
             android:marqueeRepeatLimit="marquee_forever"
             android:ellipsize="marquee"
+            android:textStyle="bold"
             android:gravity="center"/>
 
         <ImageButton
@@ -52,10 +55,12 @@
             android:contentDescription="@string/menu"
             android:backgroundTint="@android:color/transparent"
             android:layout_marginEnd="@dimen/_50sdp"
-            app:tint="@color/white" />
+            app:tint="@color/white"
+            android:padding="@dimen/_10sdp"/>
     </LinearLayout>
 
     <ImageButton
+        android:id="@+id/lockBtn"
         android:layout_width="@dimen/_50sdp"
         android:layout_height="@dimen/_50sdp"
         android:backgroundTint="@android:color/transparent"
@@ -64,4 +69,42 @@
         app:layout_constraintEnd_toEndOf="@+id/topController"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/white" />
+    <ImageButton
+        android:id="@+id/playPauseBtn"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:src="@drawable/play_icon"
+        android:contentDescription="@string/play_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:selectableItemBackground"
+        app:tint="@color/white" />
+
+
+    <LinearLayout
+        android:id="@+id/bottomController"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="#42000000"
+        android:gravity="end|bottom"
+        android:orientation="horizontal">
+
+
+        <ImageButton
+            android:id="@+id/fullScreenbtn"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:src="@drawable/fullscreen_icon"
+            android:contentDescription="@string/fullscreen_btn"
+            android:backgroundTint="@android:color/transparent"
+            app:tint="@color/white" />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

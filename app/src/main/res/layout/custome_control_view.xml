@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_5sdp"
-        app:buffered_color="#80FFFFFF"
+        app:buffered_color="@color/grey"
         app:played_color="@color/white"
         app:scrubber_color="@color/white"
         app:scrubber_disabled_size="@dimen/_5sdp"
