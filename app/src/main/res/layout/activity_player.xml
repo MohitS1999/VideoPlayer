@@ -89,6 +89,40 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/white" />
 
+    <Button
+        android:id="@+id/brigthnessIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/lock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:drawableLeft="@drawable/brightness_icon"
+        android:textSize="@dimen/_16ssp"
+        android:drawableTint="@color/white"
+        android:visibility="gone"
+        android:background="#42000000"
+        android:textStyle="bold"
+        android:text="@string/O"/>
+    <Button
+        android:id="@+id/volumeIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/lock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:drawableLeft="@drawable/volume_icon"
+        android:textSize="@dimen/_16ssp"
+        android:drawableTint="@color/white"
+        android:backgroundTint="@color/grey"
+        android:visibility="gone"
+        android:background="#42000000"
+        android:textStyle="bold"
+        android:text="@string/O"/>
+
     <ImageButton
         android:id="@+id/playPauseBtn"
         android:layout_width="@dimen/_50sdp"

@@ -1,8 +1,12 @@
 package com.example.videoplayer.UI
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
+import android.content.res.Resources
+import android.media.AudioManager
 import android.media.VolumeShaper.Configuration
 import android.net.Uri
 import android.os.Build
@@ -11,10 +15,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.View
+import android.view.*
 import android.view.Window.FEATURE_NO_TITLE
-import android.view.WindowInsetsController
-import android.view.WindowManager
+import androidx.core.view.GestureDetectorCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -42,21 +45,31 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.google.android.exoplayer2.util.MimeTypes
 import com.google.common.net.HttpHeaders.USER_AGENT
+import com.google.rpc.context.AttributeContext.Resource
 import kotlinx.android.synthetic.main.activity_player.*
 import kotlinx.android.synthetic.main.list_view.*
+import java.lang.Math.abs
 
 private const val TAG = "PlayerActivity"
 
-class PlayerActivity : AppCompatActivity() {
+class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListener,
+    GestureDetector.OnGestureListener {
 
     private lateinit var binding: ActivityPlayerBinding
     private lateinit var videoList: ArrayList<VideoData>
-    private lateinit var exoPlayer: ExoPlayer
-    private var playbackPosition = 0L
-    private var playWhenReady = true
-    private lateinit var runnable: Runnable
-    private var pos: Int = -1
-    private var isLocked: Boolean = false
+    private lateinit var gestureDetectorCompat: GestureDetectorCompat
+
+    companion object {
+        private lateinit var exoPlayer: ExoPlayer
+        private var playbackPosition = 0L
+        private var playWhenReady = true
+        private lateinit var runnable: Runnable
+        private var pos: Int = -1
+        private var isLocked: Boolean = false
+        private var audioManager: AudioManager? = null
+        private var brigthness: Int = 0
+        private var volume:Int = 0
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,10 +96,9 @@ class PlayerActivity : AppCompatActivity() {
         if (bundle != null) {
             videoList = bundle.getParcelableArrayList("list")!!
         }
-
+        gestureDetectorCompat = GestureDetectorCompat(this, this)
         preparePlayer()
         initializeBinding()
-
 
 
     }
@@ -101,7 +113,6 @@ class PlayerActivity : AppCompatActivity() {
             exo.playWhenReady = true
             doubleTapEnable()
             exo.setMediaSource(setMediaType())
-            exo.seekTo(playbackPosition)
             exo.playWhenReady = playWhenReady
             exo.prepare()
             playVideo()
@@ -229,24 +240,118 @@ class PlayerActivity : AppCompatActivity() {
 
 
     }
-    private fun doubleTapEnable(){
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun doubleTapEnable() {
         binding.playerView.player = exoPlayer
-        binding.ytOverlay.performListener(object : YouTubeOverlay.PerformListener{
+        binding.ytOverlay.performListener(object : YouTubeOverlay.PerformListener {
             override fun onAnimationEnd() {
                 binding.ytOverlay.visibility = View.GONE
             }
+
             override fun onAnimationStart() {
                 binding.ytOverlay.visibility = View.VISIBLE
             }
         })
         binding.ytOverlay.player(exoPlayer)
+        binding.playerView.setOnTouchListener { v, event ->
+            binding.playerView.isDoubleTapEnabled = false
+            if(!isLocked){
+                binding.playerView.isDoubleTapEnabled = true
+                gestureDetectorCompat.onTouchEvent(event)
+                if (event.action == MotionEvent.ACTION_UP){
+                    binding.brigthnessIcon.visibility = View.GONE
+                    binding.volumeIcon.visibility = View.GONE
+                    // for immersive mode
+                    WindowCompat.setDecorFitsSystemWindows(window, false)
+                    WindowInsetsControllerCompat(window, binding.root).let { controller ->
+                        controller.hide(WindowInsetsCompat.Type.systemBars())
+                        controller.systemBarsBehavior =
+                            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                    }
+                }
+            }
+
+            return@setOnTouchListener false
+        }
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
+        audioManager?.abandonAudioFocus(this)
         releasePlayer()
 
+    }
+
+    override fun onAudioFocusChange(focusChange: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onDown(e: MotionEvent): Boolean = false
+
+    override fun onShowPress(e: MotionEvent) = Unit
+
+    override fun onSingleTapUp(e: MotionEvent): Boolean = false
+
+    override fun onLongPress(e: MotionEvent) = Unit
+
+    override fun onFling(
+        e1: MotionEvent,
+        e2: MotionEvent,
+        velocityX: Float,
+        velocityY: Float
+    ): Boolean = false
+
+    override fun onScroll(
+        event: MotionEvent,
+        event1: MotionEvent,
+        distanceX: Float,
+        distanceY: Float
+    ): Boolean {
+        val sWidth = Resources.getSystem().displayMetrics.widthPixels
+        val sHeight = Resources.getSystem().displayMetrics.heightPixels
+
+        val border = 100 * Resources.getSystem().displayMetrics.density.toInt()
+        if(event!!.x < border || event.y < border || event.x > sWidth - border || event.y > sHeight - border)
+            return false
+
+        if (abs(distanceX) < abs(distanceY)) {
+            if (event!!.x < sWidth / 2) {
+                //brigthness
+                binding.brigthnessIcon.visibility = View.VISIBLE
+                binding.volumeIcon.visibility = View.GONE
+                val increase = distanceY > 0
+                val newValue = if (increase) brigthness + 1 else brigthness - 1
+                if (newValue in 0..30) brigthness = newValue
+                binding.brigthnessIcon.text = brigthness.toString()
+                setScreenBrightness(brigthness)
+            } else {
+                //volume
+                binding.brigthnessIcon.visibility = View.GONE
+                binding.volumeIcon.visibility = View.VISIBLE
+                val maxVolume = audioManager!!.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+                val increase = distanceY > 0
+                val newValue = if (increase) volume + 1 else volume - 1
+                if (newValue in 0..maxVolume) volume = newValue
+                binding.volumeIcon.text = volume.toString()
+                audioManager!!.setStreamVolume(AudioManager.STREAM_MUSIC, volume,0)
+            }
+        }
+        return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(audioManager == null) audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        if (brigthness != 0) setScreenBrightness(brigthness)
+    }
+
+    private fun setScreenBrightness(value: Int) {
+        val d = 1.0f / 30
+        val lp = this.window.attributes
+        lp.screenBrightness = d * value
+        this.window.attributes = lp
     }
 
 }

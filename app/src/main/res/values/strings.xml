@@ -16,4 +16,5 @@
     <string name="fullscreen_btn">FullScreen Button</string>
     <string name="play_btn">Play Button</string>
     <string name="search">search</string>
+    <string name="O">0</string>
 </resources>
