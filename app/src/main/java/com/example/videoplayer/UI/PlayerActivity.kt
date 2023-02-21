@@ -23,6 +23,7 @@ import com.example.videoplayer.Model.VideoData
 import com.example.videoplayer.R
 import com.example.videoplayer.databinding.ActivityPlayerBinding
 import com.example.videoplayer.util.DoubleClickListener
+import com.github.vkay94.dtpv.youtube.YouTubeOverlay
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -56,7 +57,6 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var runnable: Runnable
     private var pos: Int = -1
     private var isLocked: Boolean = false
-    private var moreTime: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,24 +87,7 @@ class PlayerActivity : AppCompatActivity() {
         preparePlayer()
         initializeBinding()
 
-        binding.forwardFl.setOnClickListener(DoubleClickListener(callback = object :
-            DoubleClickListener.Callback {
-            override fun doubleClicked() {
-                binding.playerView.showController()
-                binding.forwardBtn.visibility = View.VISIBLE
-                exoPlayer.seekTo(exoPlayer.currentPosition + 10000)
-                moreTime = 0
-            }
-        }))
-        binding.rewindFl.setOnClickListener(DoubleClickListener(callback = object :
-            DoubleClickListener.Callback {
-            override fun doubleClicked() {
-                binding.playerView.showController()
-                binding.rewindBtn.visibility = View.VISIBLE
-                exoPlayer.seekTo(exoPlayer.currentPosition - 10000)
-                moreTime = 0
-            }
-        }))
+
 
     }
 
@@ -116,7 +99,7 @@ class PlayerActivity : AppCompatActivity() {
         exoPlayer = ExoPlayer.Builder(this).build()
         exoPlayer?.let { exo ->
             exo.playWhenReady = true
-            binding.playerView.player = exo
+            doubleTapEnable()
             exo.setMediaSource(setMediaType())
             exo.seekTo(playbackPosition)
             exo.playWhenReady = playWhenReady
@@ -243,13 +226,20 @@ class PlayerActivity : AppCompatActivity() {
 
         if (isLocked) binding.lockBtn.visibility = View.VISIBLE
         else binding.lockBtn.visibility = visibility
-        if (moreTime == 2) {
-            binding.rewindBtn.visibility = View.GONE
-            binding.forwardBtn.visibility = View.GONE
-        } else {
-            ++moreTime
-        }
 
+
+    }
+    private fun doubleTapEnable(){
+        binding.playerView.player = exoPlayer
+        binding.ytOverlay.performListener(object : YouTubeOverlay.PerformListener{
+            override fun onAnimationEnd() {
+                binding.ytOverlay.visibility = View.GONE
+            }
+            override fun onAnimationStart() {
+                binding.ytOverlay.visibility = View.VISIBLE
+            }
+        })
+        binding.ytOverlay.player(exoPlayer)
     }
 
 
