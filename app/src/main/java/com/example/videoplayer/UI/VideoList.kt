@@ -1,5 +1,6 @@
 package com.example.videoplayer.UI
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -52,19 +53,24 @@ class VideoList : Fragment() {
         val searchView = menu.findItem(R.id.seachView)?.actionView as SearchView
         searchView.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
-                TODO("Not yet implemented")
+
+                return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText != null){
-                    Toast.makeText(requireContext(),newText.toString(),Toast.LENGTH_SHORT).show()
-                }
-                return true
+                videoAdapter.filter.filter(newText.toString())
+                return false
             }
 
         })
+
         super.onCreateOptionsMenu(menu, inflater)
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun observeSongs() {
         viewModel.getSongs.observe(viewLifecycleOwner){
             when(it){
@@ -81,6 +87,7 @@ class VideoList : Fragment() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView(){
         Log.d(TAG, "updateRecyclerView: ${videoList.size}")
         binding.videoRecyclerView.setHasFixedSize(true)
@@ -88,6 +95,7 @@ class VideoList : Fragment() {
         binding.videoRecyclerView.layoutManager = LinearLayoutManager(context)
         videoAdapter = VideoSongAdapter(requireActivity(),videoList,::onSongClicked)
         binding.videoRecyclerView.adapter = videoAdapter
+        videoAdapter.notifyDataSetChanged()
     }
     private fun onSongClicked(list:ArrayList<VideoData>,position: Int){
         Log.d(TAG, "onSongClicked:$position")
@@ -96,6 +104,7 @@ class VideoList : Fragment() {
         bundle.putInt("position",position)
         findNavController().navigate(R.id.action_videoList_to_playerActivity,bundle)
     }
+
 
 
 }

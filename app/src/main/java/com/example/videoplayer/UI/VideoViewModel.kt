@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+
 import com.example.videoplayer.Model.VideoData
 import com.example.videoplayer.repository.VideoRepository
 import com.example.videoplayer.util.UiState
@@ -23,9 +24,12 @@ class VideoViewModel @Inject constructor(
     val getSongs: LiveData<UiState<ArrayList<VideoData>>>
         get() = _getSongs
 
+
     init {
         getAllVideos()
     }
+
+
 
     fun getAllVideos(){
         _getSongs.value = UiState.Loading

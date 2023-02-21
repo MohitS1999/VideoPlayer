@@ -45,6 +45,7 @@ import kotlinx.android.synthetic.main.activity_player.*
 import kotlinx.android.synthetic.main.list_view.*
 
 private const val TAG = "PlayerActivity"
+
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
@@ -53,24 +54,26 @@ class PlayerActivity : AppCompatActivity() {
     private var playbackPosition = 0L
     private var playWhenReady = true
     private lateinit var runnable: Runnable
-    private var pos:Int = -1
-    private var isLocked:Boolean = false
-    private var moreTime:Int = 0
+    private var pos: Int = -1
+    private var isLocked: Boolean = false
+    private var moreTime: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         actionBar?.hide()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            window.attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            window.attributes.layoutInDisplayCutoutMode =
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
         }
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setTheme(R.style.PlayerActivity)
         setContentView(binding.root)
         // for immersive mode
-        WindowCompat.setDecorFitsSystemWindows(window,false)
-        WindowInsetsControllerCompat(window,binding.root).let {  controller ->
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowInsetsControllerCompat(window, binding.root).let { controller ->
             controller.hide(WindowInsetsCompat.Type.systemBars())
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
 
         // getting the data from recycler view
@@ -84,7 +87,8 @@ class PlayerActivity : AppCompatActivity() {
         preparePlayer()
         initializeBinding()
 
-        binding.forwardFl.setOnClickListener(DoubleClickListener(callback = object : DoubleClickListener.Callback {
+        binding.forwardFl.setOnClickListener(DoubleClickListener(callback = object :
+            DoubleClickListener.Callback {
             override fun doubleClicked() {
                 binding.playerView.showController()
                 binding.forwardBtn.visibility = View.VISIBLE
@@ -92,7 +96,8 @@ class PlayerActivity : AppCompatActivity() {
                 moreTime = 0
             }
         }))
-        binding.rewindFl.setOnClickListener(DoubleClickListener(callback = object : DoubleClickListener.Callback {
+        binding.rewindFl.setOnClickListener(DoubleClickListener(callback = object :
+            DoubleClickListener.Callback {
             override fun doubleClicked() {
                 binding.playerView.showController()
                 binding.rewindBtn.visibility = View.VISIBLE
@@ -104,7 +109,10 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun preparePlayer() {
-        try {exoPlayer.release()}catch (_: java.lang.Exception){}
+        try {
+            exoPlayer.release()
+        } catch (_: java.lang.Exception) {
+        }
         exoPlayer = ExoPlayer.Builder(this).build()
         exoPlayer?.let { exo ->
             exo.playWhenReady = true
@@ -115,10 +123,10 @@ class PlayerActivity : AppCompatActivity() {
             exo.prepare()
             playVideo()
         }
-        exoPlayer.addListener(object : Player.Listener{
+        exoPlayer.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
                 super.onPlaybackStateChanged(playbackState)
-                if(playbackState == Player.STATE_ENDED) nextVideo()
+                if (playbackState == Player.STATE_ENDED) nextVideo()
             }
         })
         setVisibility()
@@ -129,37 +137,36 @@ class PlayerActivity : AppCompatActivity() {
         preparePlayer()
     }
 
-    private fun initializeBinding(){
-        binding.backBtn.setOnClickListener{
-            if (resources.configuration.orientation == ORIENTATION_LANDSCAPE){
+    private fun initializeBinding() {
+        binding.backBtn.setOnClickListener {
+            if (resources.configuration.orientation == ORIENTATION_LANDSCAPE) {
                 // change the orientation of the player
                 playInFullScreen(false)
-            }else{
+            } else {
                 finish()
             }
 
         }
-        binding.playPauseBtn.setOnClickListener{
+        binding.playPauseBtn.setOnClickListener {
             if (exoPlayer.isPlaying) pauseVideo()
             else playVideo()
         }
         binding.fullScreenbtn.setOnClickListener {
-            if (resources.configuration.orientation == ORIENTATION_PORTRAIT){
+            if (resources.configuration.orientation == ORIENTATION_PORTRAIT) {
                 playInFullScreen(true)
-            }else{
+            } else {
                 playInFullScreen(false)
             }
         }
         binding.lockBtn.setOnClickListener {
 
-            if (!isLocked){
+            if (!isLocked) {
                 // hiding
                 isLocked = true
                 binding.playerView.hideController()
                 binding.playerView.useController = false
                 binding.lockBtn.setImageResource(R.drawable.close_lock)
-            }
-            else{
+            } else {
                 //showing
                 isLocked = false
                 binding.playerView.useController = true
@@ -169,16 +176,15 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun playVideo(){
+    private fun playVideo() {
         binding.playPauseBtn.setImageResource(R.drawable.pause_icon)
         exoPlayer.play()
     }
 
-    private fun pauseVideo(){
+    private fun pauseVideo() {
         binding.playPauseBtn.setImageResource(R.drawable.play_icon)
         exoPlayer.pause()
     }
-
 
 
     override fun onPause() {
@@ -194,52 +200,53 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun playInFullScreen(enable:Boolean){
-        if (enable){
+    private fun playInFullScreen(enable: Boolean) {
+        if (enable) {
             binding.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FILL
             exoPlayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
             binding.fullScreenbtn.setImageResource(R.drawable.fullscreen_exit)
-        }else{
+        } else {
             binding.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
             exoPlayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
             binding.fullScreenbtn.setImageResource(R.drawable.fullscreen_icon)
         }
         requestedOrientation = if (enable) {
             ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        }else{
+        } else {
             ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
     }
+
     private fun setMediaType(): MediaSource {
         binding.videoTitle.text = videoList.get(pos).songName.toString()
         binding.videoTitle.isSelected = true
-        val url:String = videoList.get(pos).songUrl.toString()
+        val url: String = videoList.get(pos).songUrl.toString()
         val defaultHttpDataSourceFactory = DefaultHttpDataSource.Factory()
         val mediaItem = MediaItem.fromUri(url)
         return ProgressiveMediaSource.Factory(defaultHttpDataSourceFactory)
             .createMediaSource(mediaItem)
     }
 
-    private fun setVisibility(){
+    private fun setVisibility() {
         runnable = Runnable {
             if (binding.playerView.isControllerVisible) changeVisibility(View.VISIBLE)
             else changeVisibility(View.INVISIBLE)
-            Handler(Looper.getMainLooper()).postDelayed(runnable,300)
+            Handler(Looper.getMainLooper()).postDelayed(runnable, 300)
         }
-        Handler(Looper.getMainLooper()).postDelayed(runnable,0)
+        Handler(Looper.getMainLooper()).postDelayed(runnable, 0)
     }
 
-    private fun changeVisibility(visibility:Int){
+    private fun changeVisibility(visibility: Int) {
         binding.topController.visibility = visibility
         binding.bottomController.visibility = visibility
         binding.playPauseBtn.visibility = visibility
 
         if (isLocked) binding.lockBtn.visibility = View.VISIBLE
         else binding.lockBtn.visibility = visibility
-        if (moreTime == 2){
+        if (moreTime == 2) {
             binding.rewindBtn.visibility = View.GONE
             binding.forwardBtn.visibility = View.GONE
-        }else{
+        } else {
             ++moreTime
         }
 
